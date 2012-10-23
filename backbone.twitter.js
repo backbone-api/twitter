@@ -1,28 +1,24 @@
-var APP = {
+if(typeof APP == "undefined"){
+	var APP = {
 			Models: {},
 			Collections: {},
 			Views: {}
 		};
-		
-	APP.Models.Tweet = Backbone.Model.extend({
+}		
+	APP.Models.Twitter = {};
+
+	APP.Models.Twitter.Tweet = Backbone.Model.extend({
 		defaults: {
 			
 		}
 		
 	});
 	
-	APP.Models.Highlight = APP.Models.Tweet.extend({
-		defaults: {
-			
-		}
-		
-	});
 	
-	APP.Collections.Highlights = APP.Collections.TwitterUser.extend({});
-	
-	
-	APP.Collections.TwitterHash = Backbone.Collection.extend({
-		model: APP.Models.Tweet,
+	APP.Collections.Twitter = {};
+
+	APP.Collections.Twitter.Hash = Backbone.Collection.extend({
+		model: APP.Models.Twitter.Tweet,
 		url: function(){ return "http://search.twitter.com/search.json?q="+this.query+"&rpp="+this.num },
 		initialize: function(options){
 			this.query=options.query;
@@ -43,8 +39,8 @@ var APP = {
 	});
 	
 	
-	APP.Collections.TwitterUser = Backbone.Collection.extend({
-		model: APP.Models.Tweet,
+	APP.Collections.Twitter.User = Backbone.Collection.extend({
+		model: APP.Models.Twitter.Tweet,
 		url: function(){ return "http://twitter.com/status/user_timeline/" + this.user + ".json?count="+this.num },
 		initialize: function(options){
 			this.user=options.user;
@@ -63,7 +59,7 @@ var APP = {
 		
 	});
 	
-	APP.Views.Module = Backbone.View.extend({
+	APP.Views.Twitter.Stream = Backbone.View.extend({
 		
 		initialize: function(options){
 			
@@ -82,13 +78,15 @@ var APP = {
 		
 	});
 	
-
+/*
+Usage: 
 $(document).ready( function() { 
 
-	var data = new APP.Collections.TwitterUser({user:"tracend", num: 15});
-	var view = new APP.Views.Module({el: "#twitterfeed", model: data});
+	var data = new APP.Collections.Twitter.User({user:"tracend", num: 15});
+	var view = new APP.Views.Twitter.Stream({el: "#twitterfeed", model: data});
 	
-	var data1 = new APP.Collections.TwitterHash({query:"%23AlphasOnSyfy", num: 15});
-	var view1 = new APP.Views.Module({el: "#twitterhash", model: data1});
+	var data1 = new APP.Collections.Twitter.Hash({query:"%23AlphasOnSyfy", num: 15});
+	var view1 = new APP.Views.Twitter.Stream({el: "#twitterhash", model: data1});
 	
 });
+*/
