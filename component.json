@@ -1,6 +1,6 @@
 {
-  "name": "Backbone Twitter",
-  "version": "0.2.0",
-  "main": ["./backbone.twitter.js"],
-  "dependencies": { "backbone", "underscore", "backbone.app" }
+  "name": "backbone-api-twitter",
+  "version": "0.1.0",
+  "main": ["./backbone.api.twitter.js"],
+  "dependencies": { "backbone", "underscore" }
 }
