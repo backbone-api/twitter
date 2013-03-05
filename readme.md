@@ -6,5 +6,5 @@ Backbone.js helper for Twitter requests
 
 Using Bower: 
 ```
-bower install backbone.twitter
+bower install backbone.api.twitter
 ```
