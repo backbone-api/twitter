@@ -1,11 +1,22 @@
-if(typeof APP == "undefined"){
-	var APP = {
-			Models: {},
-			Collections: {},
-			Views: {}
-		};
-}		
+(function(_, Backbone) {
+  
+	// Fallbacks
+	APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
+	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
+	
+	// main request method
+	Backbone.API.Twitter = Backbone.Collection.extend({
+		
+	});
+	
+	Backbone.API.Twitter.User = Backbone.Model.extend({
+		
+	});
+	
+	APP.Twitter = {};
 	APP.Models.Twitter = {};
+	APP.Collections.Twitter = {};
+	APP.Views.Twitter = {};
 
 	APP.Models.Twitter.Tweet = Backbone.Model.extend({
 		defaults: {
@@ -15,19 +26,18 @@ if(typeof APP == "undefined"){
 	});
 	
 	
-	APP.Collections.Twitter = {};
-
-	APP.Collections.Twitter.Hash = Backbone.Collection.extend({
+	APP.Twitter.Search = Backbone.Collection.extend({
 		model: APP.Models.Twitter.Tweet,
-		url: function(){ return "http://search.twitter.com/search.json?q="+this.query+"&rpp="+this.num },
-		initialize: function(options){
-			this.query=options.query;
-			this.num=options.num;
+		url: function(){ return "http://search.twitter.com/search.json?q="+ encodeURIComponent(this.query) +"&rpp="+ this.num },
+		initialize: function(models, options){
+			// settings
+			this.query=options.query || "";
+			this.num=options.num || 10;
 			
 			this.fetch();
 		}, 
 		parse: function( data ){
-			
+			//console.log( data );
 			return data.results;
 		}, 
 		sync: function(method, model, options){  
@@ -90,3 +100,5 @@ $(document).ready( function() {
 	
 });
 */
+
+})(this._, this.Backbone);
