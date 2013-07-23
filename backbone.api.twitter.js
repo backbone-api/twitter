@@ -88,6 +88,12 @@
 
 	});
 
+	// alias APP.API
+	if( typeof APP != "undefined" && (_.isUndefined( APP.API) || _.isUndefined( APP.API.Twitter) ) ){
+		APP.API = APP.API || {};
+		APP.API.Twitter = Backbone.API.Twitter;
+	}
+
 	// Shortcut
 	if(typeof window.Twitter == "undefined"){
 		window.Twitter = Backbone.API.Twitter;
