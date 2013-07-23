@@ -3,6 +3,9 @@
 	// Fallbacks
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
 
+	// API root (v1.1)
+	var api = "https://api.twitter.com/1.1/";
+
 	// Namespace definition
 	Backbone.API.Twitter = {
 		Models : {},
@@ -52,7 +55,7 @@
 
 	Backbone.API.Twitter.Collections.User = Collection.extend({
 		model: Backbone.API.Twitter.Models.Tweet,
-		url: function(){ return "http://twitter.com/status/user_timeline/" + this.user + ".json?count="+this.num },
+		url: function(){ return api +"statuses/user_timeline.json?screen_name=" + this.user + "&count="+this.num },
 		initialize: function(options){
 			this.user=options.user;
 			this.num=options.num;
@@ -79,7 +82,7 @@
 			this.model.bind("change", this.render);
 			this.model.bind("reset", this.render);
 
-			this.template = Handlebars.compile( $(this.el).find("#twitter-hash").html() );
+			this.template = Handlebars.compile( this.options.template );
 		},
 		render: function(){
 
@@ -100,17 +103,5 @@
 		window.Twitter = Backbone.API.Twitter;
 	}
 
-/*
-Usage:
-$(document).ready( function() {
-
-	var data = new APP.Collections.Twitter.User({user:"tracend", num: 15});
-	var view = new APP.Views.Twitter.Stream({el: "#twitterfeed", model: data});
-
-	var data1 = new APP.Collections.Twitter.Hash({query:"%23AlphasOnSyfy", num: 15});
-	var view1 = new APP.Views.Twitter.Stream({el: "#twitterhash", model: data1});
-
-});
-*/
 
 })(this._, this.Backbone);
