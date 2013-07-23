@@ -1,33 +1,34 @@
 (function(_, Backbone) {
 
 	// Fallbacks
-	APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
 
-	// main request method
-	Backbone.API.Twitter = Backbone.Collection.extend({
+	// Namespace definition
+	Backbone.API.Twitter = {
+		Models : {},
+		Collections : {},
+		Views : {}
+	};
+
+	// conditioning the existance of the Backbone APP()
+	var Model = ( typeof APP != "undefined" && !_.isUndefined( APP.Model) ) ? APP.Model : Backbone.Model;
+	var View = ( typeof APP != "undefined" && !_.isUndefined( APP.View) ) ? APP.View : Backbone.View;
+	var Collection = ( typeof APP != "undefined" && !_.isUndefined( APP.Collection) ) ? APP.Collection : Backbone.Collection;
+
+	// Models
+	Backbone.API.Twitter.Models.User = Model.extend({
 
 	});
 
-	Backbone.API.Twitter.User = Backbone.Model.extend({
-
-	});
-
-	APP.Twitter = {};
-	APP.Models.Twitter = {};
-	APP.Collections.Twitter = {};
-	APP.Views.Twitter = {};
-
-	APP.Models.Twitter.Tweet = Backbone.Model.extend({
+	Backbone.API.Twitter.Models.Tweet = Model.extend({
 		defaults: {
 
 		}
-
 	});
 
 
-	APP.Twitter.Search = Backbone.Collection.extend({
-		model: APP.Models.Twitter.Tweet,
+	Backbone.API.Twitter.Collections.Search = Collection.extend({
+		model: Backbone.API.Twitter.Models.Tweet,
 		url: function(){ return "http://search.twitter.com/search.json?q="+ encodeURIComponent(this.query) +"&rpp="+ this.num },
 		initialize: function(models, options){
 			// settings
@@ -49,8 +50,8 @@
 	});
 
 
-	APP.Collections.Twitter.User = Backbone.Collection.extend({
-		model: APP.Models.Twitter.Tweet,
+	Backbone.API.Twitter.Collections.User = Collection.extend({
+		model: Backbone.API.Twitter.Models.Tweet,
 		url: function(){ return "http://twitter.com/status/user_timeline/" + this.user + ".json?count="+this.num },
 		initialize: function(options){
 			this.user=options.user;
@@ -69,7 +70,7 @@
 
 	});
 
-	APP.Views.Twitter.Stream = Backbone.View.extend({
+	Backbone.API.Twitter.Views.Stream = View.extend({
 
 		initialize: function(options){
 
