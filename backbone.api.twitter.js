@@ -1,7 +1,7 @@
 (function(_, Backbone) {
 
 	// API root (v1.1)
-	var api = "https://api.twitter.com/1.1/";
+	var api = "https://api.twitter.com/1.1";
 
 	// conditioning the existance of the Backbone APP()
 	var Model = ( typeof APP != "undefined" && !_.isUndefined( APP.Model) ) ? APP.Model : Backbone.Model;
@@ -19,13 +19,37 @@
 	Twitter.Views = {};
 
 
+	// JSONP requests for all direct API requests
+	Twitter.Model = Model.extend({
+
+		sync : function( method, model, options ) {
+
+			options.dataType = 'jsonp';
+
+			return Backbone.sync( method, model, options );
+
+		}
+	});
+
+	Twitter.Collection = Model.extend({
+
+		sync : function( method, model, options ) {
+
+			options.dataType = 'jsonp';
+
+			return Backbone.sync( method, model, options );
+
+		}
+	});
+
+
 	/* Models */
 
-	Twitter.Models.User = Model.extend({
+	Twitter.Models.User = Twitter.Model.extend({
 
 	});
 
-	Twitter.Models.Tweet = Model.extend({
+	Twitter.Models.Tweet = Twitter.Model.extend({
 		defaults: {
 
 		}
@@ -34,9 +58,11 @@
 
 	/* Collections */
 
-	Twitter.Collections.Search = Collection.extend({
+	Twitter.Collections.Search = Twitter.Collection.extend({
 		model: Backbone.API.Twitter.Models.Tweet,
+
 		url: function(){ return "http://search.twitter.com/search.json?q="+ encodeURIComponent(this.query) +"&rpp="+ this.num },
+
 		initialize: function(models, options){
 			// settings
 			this.query=options.query || "";
@@ -44,35 +70,29 @@
 
 			this.fetch();
 		},
+
 		parse: function( data ){
 			//console.log( data );
 			return data.results;
-		},
-		sync: function(method, model, options){
-			//options.timeout = 10000;
-			options.dataType = "jsonp";
-			return Backbone.sync(method, model, options);
-		  }
+		}
 
 	});
 
-	Twitter.Collections.User = Collection.extend({
+	Twitter.Collections.User = Twitter.Collection.extend({
 		model: Backbone.API.Twitter.Models.Tweet,
-		url: function(){ return api +"statuses/user_timeline.json?screen_name=" + this.user + "&count="+this.num },
+
+		url: function(){ return api +"/statuses/user_timeline.json?screen_name=" + this.user + "&count="+this.num },
+
 		initialize: function(options){
 			this.user=options.user;
 			this.num=options.num;
 
 			this.fetch();
 		},
+
 		parse: function( data ){
 			return data;
-		},
-		sync: function(method, model, options){
-			//options.timeout = 10000;
-			options.dataType = "jsonp";
-			return Backbone.sync(method, model, options);
-		  }
+		}
 
 	});
 
@@ -88,6 +108,7 @@
 
 			this.template = Handlebars.compile( this.options.template );
 		},
+
 		render: function(){
 
 			var html = this.template({ items: this.model.toJSON() });
