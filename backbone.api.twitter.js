@@ -22,6 +22,14 @@
 	// JSONP requests for all direct API requests
 	Twitter.Model = Model.extend({
 
+		initialize: function(model, options){
+
+			options = options || {};
+			_.extend(this.options, options);
+
+			return Model.prototype.initialize.apply( this. arguments );
+		},
+
 		sync : function( method, model, options ) {
 
 			options.dataType = 'jsonp';
@@ -31,7 +39,15 @@
 		}
 	});
 
-	Twitter.Collection = Model.extend({
+	Twitter.Collection = Collection.extend({
+
+		initialize: function(models, options){
+
+			options = options || {};
+			_.extend(this.options, options);
+
+			return Collection.prototype.initialize.apply( this. arguments );
+		},
 
 		sync : function( method, model, options ) {
 
@@ -61,14 +77,11 @@
 	Twitter.Collections.Search = Twitter.Collection.extend({
 		model: Backbone.API.Twitter.Models.Tweet,
 
-		url: function(){ return "http://search.twitter.com/search.json?q="+ encodeURIComponent(this.query) +"&rpp="+ this.num },
+		url: function(){ return "http://search.twitter.com/search.json?q="+ encodeURIComponent(this.options.query) +"&rpp="+ this.options.num },
 
-		initialize: function(models, options){
-			// settings
-			this.query=options.query || "";
-			this.num=options.num || 10;
-
-			this.fetch();
+		options: {
+			query : "",
+			num : 10
 		},
 
 		parse: function( data ){
@@ -81,16 +94,15 @@
 	Twitter.Collections.User = Twitter.Collection.extend({
 		model: Backbone.API.Twitter.Models.Tweet,
 
-		url: function(){ return api +"/statuses/user_timeline.json?screen_name=" + this.user + "&count="+this.num },
+		url: function(){ return api +"/statuses/user_timeline.json?screen_name=" + this.options.user + "&count="+this.options.num },
 
-		initialize: function(options){
-			this.user=options.user;
-			this.num=options.num;
-
-			this.fetch();
+		options: {
+			user : null,
+			num : 10
 		},
 
 		parse: function( data ){
+			//console.log( data );
 			return data;
 		}
 
