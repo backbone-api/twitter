@@ -10,7 +10,9 @@
 
 	// Base model - mainly used for setup options
 	var Twitter = new Backbone.Model({
-		api: api
+		api: api,
+		token: 0,
+		debug: false
 	});
 
 	// Namespace definition
@@ -85,7 +87,7 @@
 		},
 
 		parse: function( data ){
-			//console.log( data );
+			if( Twitter.get("debug") ) console.log("Twitter.Collections.Search: ", data );
 			return data.results;
 		}
 
@@ -102,7 +104,7 @@
 		},
 
 		parse: function( data ){
-			//console.log( data );
+			if( Twitter.get("debug") ) console.log("Twitter.Collections.User: ", data );
 			return data;
 		}
 
