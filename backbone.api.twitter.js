@@ -1,36 +1,40 @@
 (function(_, Backbone) {
 
-	// Fallbacks
-	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
-
 	// API root (v1.1)
 	var api = "https://api.twitter.com/1.1/";
-
-	// Namespace definition
-	Backbone.API.Twitter = {
-		Models : {},
-		Collections : {},
-		Views : {}
-	};
 
 	// conditioning the existance of the Backbone APP()
 	var Model = ( typeof APP != "undefined" && !_.isUndefined( APP.Model) ) ? APP.Model : Backbone.Model;
 	var View = ( typeof APP != "undefined" && !_.isUndefined( APP.View) ) ? APP.View : Backbone.View;
 	var Collection = ( typeof APP != "undefined" && !_.isUndefined( APP.Collection) ) ? APP.Collection : Backbone.Collection;
 
-	// Models
-	Backbone.API.Twitter.Models.User = Model.extend({
+	// Base model - mainly used for setup options
+	var Twitter = new Backbone.Model({
+		api: api
+	});
+
+	// Namespace definition
+	Twitter.Models = {};
+	Twitter.Collections = {};
+	Twitter.Views = {};
+
+
+	/* Models */
+
+	Twitter.Models.User = Model.extend({
 
 	});
 
-	Backbone.API.Twitter.Models.Tweet = Model.extend({
+	Twitter.Models.Tweet = Model.extend({
 		defaults: {
 
 		}
 	});
 
 
-	Backbone.API.Twitter.Collections.Search = Collection.extend({
+	/* Collections */
+
+	Twitter.Collections.Search = Collection.extend({
 		model: Backbone.API.Twitter.Models.Tweet,
 		url: function(){ return "http://search.twitter.com/search.json?q="+ encodeURIComponent(this.query) +"&rpp="+ this.num },
 		initialize: function(models, options){
@@ -52,8 +56,7 @@
 
 	});
 
-
-	Backbone.API.Twitter.Collections.User = Collection.extend({
+	Twitter.Collections.User = Collection.extend({
 		model: Backbone.API.Twitter.Models.Tweet,
 		url: function(){ return api +"statuses/user_timeline.json?screen_name=" + this.user + "&count="+this.num },
 		initialize: function(options){
@@ -73,7 +76,8 @@
 
 	});
 
-	Backbone.API.Twitter.Views.Stream = View.extend({
+	/* Views */
+	Twitter.Views.Stream = View.extend({
 
 		initialize: function(options){
 
@@ -92,15 +96,18 @@
 
 	});
 
-	// alias APP.API
+
+	// Store in selected namespace(s)
+	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
+	Backbone.API.Twitter = Twitter;
+	// - alias APP.API
 	if( typeof APP != "undefined" && (_.isUndefined( APP.API) || _.isUndefined( APP.API.Twitter) ) ){
 		APP.API = APP.API || {};
-		APP.API.Twitter = Backbone.API.Twitter;
+		APP.API.Twitter = Twitter;
 	}
-
-	// Shortcut
+	// - Shortcut
 	if(typeof window.Twitter == "undefined"){
-		window.Twitter = Backbone.API.Twitter;
+		window.Twitter = Twitter;
 	}
 
 
